@@ -36,7 +36,7 @@ body::before {
 }
 
 .main__container {
-    border: px solid transparent;
+    border: 1px solid transparent;
     width: 320px;
     height: 496px;
     z-index: 1;
@@ -99,6 +99,7 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 20px;
 }
 
 .location {
@@ -144,16 +145,17 @@ body::before {
     padding-bottom: 12px;
 }
 .forecast-item-container::-webkit-scrollbar{
-   height: 8px; 
+    height: 8px;
 }
 .forecast-item-container::-webkit-scrollbar-track{
-   background: rgb(0, 0, 0, 0.1);
+    background: rgb(0, 0, 0, 0.1);
     border-radius: 99px;
 }
 .forecast-item-container::-webkit-scrollbar-thumb{
-   background: rgba(0, 0, 0, 0.15);
-   border-radius: 99px; 
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 99px; 
 }
+
 .forcast-item{
    min-width: 70px; 
    background: rgb(255, 255, 255, 0.1);
