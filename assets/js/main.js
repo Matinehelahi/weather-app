@@ -1,33 +1,36 @@
-const cityInput = document.querySelector('.city__input');
-const searchBtn = document.querySelector('.search__btn');
+const cityInput = document.querySelector('.city__input');//نام شهر
+const searchBtn = document.querySelector('.search__btn');//دکمه جستجو
 
-const notFoundSection = document.querySelector('.not-found');
-const searchCtiySection = document.querySelector('.search-city');
-const weatherInfoSection = document.querySelector('.wether__info');
+const notFoundSection = document.querySelector('.not-found');//بخش زمانی که شهری پیدا نشود
+const searchCtiySection = document.querySelector('.search-city');//بخش جستجوی شهر
+const weatherInfoSection = document.querySelector('.wether__info');//وضعیت آب و هوا بخش نمایش اطلاعات
 
-const countryTxt = document.querySelector('.country__txt');
-const tempTxt = document.querySelector('.temp-txt');
-const windValueTxt = document.querySelector('.wind-value-txt');
-const humidityValueTxt = document.querySelector('.humidity-value-txt');
-const weatherSummeryIg = document.querySelector('.weather__summery-img');
-const currentDateTxt = document.querySelector('.current__date-txt');
-const conditionTxt = document.querySelector('.condition__txt');
+const countryTxt = document.querySelector('.country__txt');//کشور
+const tempTxt = document.querySelector('.temp-txt');//دما
+const windValueTxt = document.querySelector('.wind-value-txt');//سرعت باد
+const humidityValueTxt = document.querySelector('.humidity-value-txt');//رطوبت
+const weatherSummeryIg = document.querySelector('.weather__summery-img');// وضعیت آب و هوا تصویر
+const currentDateTxt = document.querySelector('.current__date-txt');//تاریخ
+const conditionTxt = document.querySelector('.condition__txt');//وضعیت آب و هوا
 
-const forecastItemsContainer = document.querySelector('.forecast-item-container')
+const forecastItemsContainer = document.querySelector('.forecast-item-container');//المان نمایش پیش‌بینی وضعیت آب و هوا
 
-const apikey = '7843e467f3e199e4211f91e8222591eb';
 
-searchBtn.addEventListener('click', () => {
-    if (cityInput.value.trim() != '') {
-        updateWetherInfo(cityInput.value);
-        cityInput.value = '';
-        cityInput.blur();
+const apikey = '7843e467f3e199e4211f91e8222591eb'; // کلید API برای دسترسی به اطلاعات از OpenWeatherMap
+
+
+searchBtn.addEventListener('click', () => { // افزودن رویداد برای دکمه جستجو
+    if (cityInput.value.trim() != '') {//اگر ورودی خالی نباشه
+        updateWetherInfo(cityInput.value);//بروزرسانی اطلاعات آب و هوا
+        cityInput.value = '';// پاک کردن ورودی بعد از جستجو
+        cityInput.blur();// از حالت فوکوس خارج کردن ورودی
     }
 
 });
 
-cityInput.addEventListener('keydown', (event) => {
-    if (event.key == 'Enter' && cityInput.value.trim() != ''
+cityInput.addEventListener('keydown', (event) => {// افزودن رویداد برای کلید Enter در ورودی
+
+    if (event.key == 'Enter' && cityInput.value.trim() != '' // وقتی Enter زده شود و ورودی خالی نباشد
     ) {
         updateWetherInfo(cityInput.value);
         cityInput.value = '';
@@ -35,14 +38,15 @@ cityInput.addEventListener('keydown', (event) => {
     }
 });
 
-async function getFetchData(endPoint, city) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apikey}&units=metric`
-    const response = await fetch(apiUrl);
+async function getFetchData(endPoint, city) { // تابع برای دریافت داده‌های API از 
 
-    return response.json()
+    const apiUrl = `https://api.openweathermap.org/data/2.5/${endPoint}?q=${city}&appid=${apikey}&units=metric`
+    const response = await fetch(apiUrl);// ارسال درخواست  
+
+    return response.json() // تبدیل پاسخ به فرمت JSON
 }
 
-function getWeatherIcon(id) {
+function getWeatherIcon(id) { // تابع برای تعیین نماد وضعیت آب و هوا
     if (id <= 232) return 'thunderstrom.svg'
     if (id <= 321) return 'drizzle.jpg'
     if (id <= 531) return 'rain.svg'
@@ -53,30 +57,32 @@ function getWeatherIcon(id) {
 
 
 }
-
+// تابع برای گرفتن تاریخ الانه
 function getCurrentDate() {
-    const currentDate = new Date()
+    const currentDate = new Date() //گرفتن تاریخ و زمان
     const options = {
         weekday: 'short',
         day: '2-digit',
         month: 'short'
     }
-    return currentDate.toLocaleDateString('en-GB', options)
+    return currentDate.toLocaleDateString('en-US', options) //برگرداندن تاریخ
 }
+//بروزرسانی اطلاعات آب و هوا
 async function updateWetherInfo(city) {
-    const weatherData = await getFetchData('weather', city)
-    if (weatherData.cod != 200) {
-        showDisplaySection(notFoundSection)
+    const weatherData = await getFetchData('weather', city) //دریافت وضعیت آب و هوا
+    if (weatherData.cod != 200) { // (اگر پاسخ متفاوت از 200 بود (خطا
+        showDisplaySection(notFoundSection) //نمایش بخش خطا
         return
     }
 
-    const {
-        name: country,
-        main: { temp, humidity },
-        weather: [{ id, main }],
-        wind: { speed }
-    } = weatherData
+    const {     // استخراج از پاسخ API
 
+        name: country, //کشور
+        main: { temp, humidity },//دما و رطوبت
+        weather: [{ id, main }],// وضعیت کلی آب و هوا
+        wind: { speed }  // سرعت باد
+    } = weatherData
+    //نمایش داده‌ها در صفحه
     countryTxt.textContent = country;
     tempTxt.textContent = Math.round(temp) + '℃';
     conditionTxt.textContent = main;
@@ -85,19 +91,20 @@ async function updateWetherInfo(city) {
 
     currentDateTxt.textContent = getCurrentDate()
     weatherSummeryIg.src = `assets/weather/${getWeatherIcon(id)}`
-
+    //نمایش تصویر
     await updateForecastInfo(city)
     showDisplaySection(weatherInfoSection);
 }
 
+//بروزرسانی پیش‌بینی وضعیت آب و هوا روز های آینده
 async function updateForecastInfo(city) {
     const forecastsData = await getFetchData('forecast', city)
+//دریافت پیش‌بینی وضعیت آب و هوا برای چند روز پیش فرض
+    const timeTaken = '12:00:00' //زمان مورد نظر برای پیش‌بینی‌ها
+    const todayDate = new Date().toISOString().split('T')[0] // تاریخ امروز
 
-    const timeTaken = '12:00:00'
-    const todayDate = new Date().toISOString().split('T')[0]
-
-    forecastItemsContainer.innerHTML = ''
-    forecastsData.list.forEach(forecastWeather => {
+    forecastItemsContainer.innerHTML = '' //پاک کردن پیش‌بینی‌های قبلی
+    forecastsData.list.forEach(forecastWeather => {  // نمایش پیش‌بینی‌ها برای زمان مشخص (12:00) و برای روزهای بعد از امروز
         if (forecastWeather.dt_txt.includes(timeTaken) &&
             !forecastWeather.dt_txt.includes(todayDate)) {
             updateForecastItems(forecastWeather)
@@ -116,9 +123,9 @@ function updateForecastItems(weatherData) {
     } = weatherData
 
     const dateTaken = new Date(date)
-    const dateOption ={
-        day:'2-digit',
-        month:'short'
+    const dateOption = {
+        day: '2-digit',
+        month: 'short'
     }
 
     const dateResult = dateTaken.toLocaleDateString('en-US', dateOption)
@@ -129,7 +136,7 @@ function updateForecastItems(weatherData) {
         <h5 class="forcast-item-temp">${Math.round(temp)} &#8451;</h5>
     </div> 
     `
-    forecastItemsContainer.insertAdjacentHTML('beforeend',forecastItem)
+    forecastItemsContainer.insertAdjacentHTML('beforeend', forecastItem)
 }
 function showDisplaySection(section) {
     [weatherInfoSection, searchCtiySection, notFoundSection]
