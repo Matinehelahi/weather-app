@@ -116,19 +116,19 @@ async function updateForecastInfo(city) {
 function updateForecastItems(weatherData) {
     console.log(weatherData)
     const {
-        dt_txt: date,
-        weather: [{ id }],
-        main: { temp }
+        dt_txt: date, //تاریخ و زمان پیش‌بینی
+        weather: [{ id }], // وضعیت آب و هوا
+        main: { temp } //دمای پیش‌بینی شده
 
     } = weatherData
 
-    const dateTaken = new Date(date)
+    const dateTaken = new Date(date) // تبدیل تاریخ به فرمت
     const dateOption = {
         day: '2-digit',
         month: 'short'
     }
 
-    const dateResult = dateTaken.toLocaleDateString('en-US', dateOption)
+    const dateResult = dateTaken.toLocaleDateString('en-US', dateOption) // نمایش تاریخ   
     const forecastItem = `
     <div class="forcast-item">
         <h5 class="forcast-item-date regular-txt">${dateResult}</h5>
@@ -138,7 +138,8 @@ function updateForecastItems(weatherData) {
     `
     forecastItemsContainer.insertAdjacentHTML('beforeend', forecastItem)
 }
-function showDisplaySection(section) {
+function showDisplaySection(section) { // تابع برای نمایش بخش‌های مختلف صفحه
+    // مخفی کردن همه بخش‌ها و سپس نمایش بخش  
     [weatherInfoSection, searchCtiySection, notFoundSection]
         .forEach(section => section.style.display = 'none')
     section.style.display = 'flex';
